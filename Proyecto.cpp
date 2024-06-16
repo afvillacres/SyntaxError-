@@ -14,8 +14,8 @@ struct Dia {
     int menuSeleccionado;
     bool esFeriado;
 
-    Dia(string _nombre, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado) :nombre(_nombre), numeroDeTrabajadores(_numTrabajadores),
-    menuSeleccionado(menuSeleccionado), esFeriado(esFeriado) {}
+    Dia(string _nombre, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado)
+        : nombre(_nombre), numeroDeTrabajadores(_numTrabajadores), menuSeleccionado(_menuSeleccionado), esFeriado(_esFeriado) {}
 };
 
 template<typename T>
@@ -23,20 +23,19 @@ class Nodo {
 public:
     T dato;
     Nodo* siguiente;
-    Nodo* anterior;  // Nuevo puntero al nodo anterior
+    Nodo* anterior;
 
     Nodo(T valor) : dato(valor), siguiente(NULL), anterior(NULL) {}
 };
 
 template <typename T>
-
-class listaCircularDobleEnlc {// le cambie a listas circulares de doble enlc
+class listaCircularDoble {
 private:
     Nodo<T>* cabeza;
 public:
-    listaCircularDobleEnlc() : cabeza(NULL) {}
+    listaCircularDoble() : cabeza(NULL) {}
 
-    ~listaCircularDobleEnlc() {
+    ~listaCircularDoble() {
         if (cabeza != NULL) {
             Nodo<T>* actual = cabeza;
             Nodo<T>* siguienteNodo;
@@ -53,13 +52,13 @@ public:
         if (cabeza == NULL) {
             cabeza = nuevoNodo;
             nuevoNodo->siguiente = cabeza;
+            nuevoNodo->anterior = cabeza;
         } else {
-            Nodo<T>* actual = cabeza;
-            while (actual->siguiente != cabeza) {
-                actual = actual->siguiente;
-            }
-            actual->siguiente = nuevoNodo;
+            Nodo<T>* ultimo = cabeza->anterior;
+            ultimo->siguiente = nuevoNodo;
+            nuevoNodo->anterior = ultimo;
             nuevoNodo->siguiente = cabeza;
+            cabeza->anterior = nuevoNodo;
         }
     }
 
@@ -85,7 +84,7 @@ string obtenerNombreDia(int dia) {
     switch(dia) {
         case 0: return "Lunes";
         case 1: return "Martes";
-        case 2: return "Miercoles";
+        case 2: return "Miércoles";
         case 3: return "Jueves";
         case 4: return "Viernes";
         default: return "Dia no valido";
@@ -93,13 +92,13 @@ string obtenerNombreDia(int dia) {
 }
 
 int main() {
-    listaCircularDobleEnlc<Dia> semana;
+    listaCircularDoble<Dia> semana;
     int diaActual = 0;
     int semanaActual = 1;
     const int diasPorSemana = 5;
 
     for (int i = 0; i < diasPorSemana; ++i) {
-        semana.insertarAlFinal(Dia{obtenerNombreDia(i), 10, 0, false});
+        semana.insertarAlFinal(Dia{obtenerNombreDia(i), 0, 0, false});
     }
 
     const float costoPorTrabajador = 2.25;
@@ -120,9 +119,11 @@ int main() {
 
         switch (opcion) {
             case 1: {
-                semana.insertarAlFinal(Dia{obtenerNombreDia(diaActual % diasPorSemana), 0, 0, false});
-                actual = actual->siguiente;
-                diaActual++;
+                int diaSemana = diaActual % diasPorSemana;
+                actual = semana.obtenerCabeza();
+                for (int i = 0; i < diaSemana; ++i) {
+                    actual = actual->siguiente;
+                }
 
                 int opcionMenu;
                 cout << "Ingrese el menu para " << actual->dato.nombre << ":\n";
@@ -139,9 +140,16 @@ int main() {
 
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
+                diaActual++;
                 break;
             }
             case 2: {
+                int diaSemana = diaActual % diasPorSemana;
+                actual = semana.obtenerCabeza();
+                for (int i = 0; i < diaSemana; ++i) {
+                    actual = actual->siguiente;
+                }
+
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
                 cout << "Numero de trabajadores actualizado correctamente.\n";
@@ -173,6 +181,12 @@ int main() {
                 break;
             }
             case 4: {
+                int diaSemana = diaActual % diasPorSemana;
+                actual = semana.obtenerCabeza();
+                for (int i = 0; i < diaSemana; ++i) {
+                    actual = actual->siguiente;
+                }
+
                 cout << "Marcando el dia " << actual->dato.nombre << " como feriado.\n";
                 actual->dato.esFeriado = true;
                 actual->dato.menuSeleccionado = 0;
@@ -182,19 +196,18 @@ int main() {
             case 5: {
                 cout << "Terminando la semana actual." << endl;
                 semanaActual++;
-
-                for (int i = 0; i < diasPorSemana; ++i) {
-                    actual = actual->siguiente;
-                }
+                diaActual = 0;
                 break;
             }
             case 6: {
-                semana.insertarAlFinal(Dia{obtenerNombreDia(diaActual % diasPorSemana), 0, 0, false});
-                actual = actual->siguiente;
-                diaActual++;
+                int diaSemana = diaActual % diasPorSemana;
+                actual = semana.obtenerCabeza();
+                for (int i = 0; i < diaSemana; ++i) {
+                    actual = actual->siguiente;
+                }
 
                 int opcionMenu;
-                cout << "Ingrese el menu para " << actual->dato.nombre << ":\n";
+                cout << "Ingrese el nuevo menu para " << actual->dato.nombre << ":\n";
                 cout << "1. " << menus[0] << "\n";
                 cout << "2. " << menus[1] << "\n";
                 cout << "3. " << menus[2] << "\n";
@@ -202,13 +215,10 @@ int main() {
                 cin >> opcionMenu;
                 if (opcionMenu >= 1 && opcionMenu <= 3) {
                     actual->dato.menuSeleccionado = opcionMenu;
+                    cout << "Menu actualizado correctamente.\n";
                 } else {
                     cout << "Opcion invalida.\n";
                 }
-
-                cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
-                cin >> actual->dato.numeroDeTrabajadores;
-
                 break;
             }
             case 7: {
@@ -238,4 +248,3 @@ int main() {
 
     return 0;
 }
-
