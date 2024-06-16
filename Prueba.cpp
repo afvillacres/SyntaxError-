@@ -61,7 +61,7 @@ public:
 };
 
 void mostrarMenuPrincipal() {
-    cout << "\nMenu de opciones:\n";
+    cout << "\n------Menu de opciones:  -------------\n";
     cout << "1. Ingresar un nuevo dia\n";
     cout << "2. Modificar numero de trabajadores del dia\n";
     cout << "3. Ver menu y costo semanal\n";
@@ -80,7 +80,7 @@ string obtenerNombreDia(int dia) {
         case 2: return "Miércoles";
         case 3: return "Jueves";
         case 4: return "Viernes";
-        default: return "Dia desconocido";
+        default: return "Dia no valido";
     }
 }
 
@@ -131,7 +131,7 @@ int main() {
 
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
-                /*
+                /**
                 cout << "Modificar menu del dia " << actual->dato.nombre << ":\n";
                 int opcionMenu;
                 cout << "1. " << menus[0] << "\n";
@@ -144,7 +144,7 @@ int main() {
                     cout << "Menu actualizado correctamente.\n";
                 } else {
                     cout << "Opcion invalida.\n";
-                }*/
+                }**/
                 break;
             }
             case 2: {
