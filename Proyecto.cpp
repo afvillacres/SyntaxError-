@@ -6,16 +6,19 @@ hicieron para tener mas o menos una idea y seguir :D
 
 #include <iostream>
 #include <string>
+#include <fstream>//manejo de archivos, para guardar info de la semana :D
 using namespace std;
 
 struct Dia {
-    string nombre;
+    string nombreDia;
+    string nombreEmpresa;
     int numeroDeTrabajadores;
     int menuSeleccionado;
     bool esFeriado;
 
-    Dia(string _nombre, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado)
-        : nombre(_nombre), numeroDeTrabajadores(_numTrabajadores), menuSeleccionado(_menuSeleccionado), esFeriado(_esFeriado) {}
+    // Constructor para inicializar los datos del dia
+    Dia(string _nombreDia, string _nombreEmpresa, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado)
+        : nombreDia(_nombreDia), nombreEmpresa(_nombreEmpresa), numeroDeTrabajadores(_numTrabajadores), menuSeleccionado(_menuSeleccionado), esFeriado(_esFeriado) {}
 };
 
 template<typename T>
@@ -67,16 +70,14 @@ public:
     }
 };
 
-void mostrarMenuPrincipal() {
-    cout << "\n------Menu de opciones:  -------------\n";
-    cout << "1. Ingresar un nuevo dia\n";
-    cout << "2. Modificar numero de trabajadores del dia\n";
-    cout << "3. Ver menu y costo semanal\n";
-    cout << "4. Marcar dia como feriado\n";
-    cout << "5. Terminar la semana\n";
-    cout << "6. Modificar menu del dia\n";
-    cout << "7. Imprimir dias con sus menus y numero de trabajadores\n";
-    cout << "8. Salir del programa\n";
+void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
+    cout << "\n------ Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " -------------\n";
+    cout << "1. Ingresar/modificar datos del dia\n";
+    cout << "2. Ver menu y costo semanal\n";
+    cout << "3. Marcar dia como feriado\n";
+    cout << "4. Terminar la semana\n";
+    cout << "5. Imprimir dias con sus menus y numero de trabajadores\n";
+    cout << "6. Salir del programa\n";
     cout << "Ingrese una opcion: ";
 }
 
@@ -84,11 +85,32 @@ string obtenerNombreDia(int dia) {
     switch(dia) {
         case 0: return "Lunes";
         case 1: return "Martes";
-        case 2: return "Miércoles";
+        case 2: return "Miercoles";
         case 3: return "Jueves";
         case 4: return "Viernes";
         default: return "Dia no valido";
     }
+}
+
+//guarda al finalizar cada semana xd
+void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
+    ofstream archivo("datos_semana.txt");
+    if (!archivo) {
+        cerr << "Error al abrir el archivo para guardar los datos." << endl;
+        return;
+    }
+    Nodo<Dia>* temp = semana.obtenerCabeza();
+    archivo << "Semana " << semanaActual << ":\n";
+    do {
+        archivo << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
+        if (temp->dato.esFeriado) {
+            archivo << "FERIADO\n";
+        } else {
+            archivo << "Menu: " << temp->dato.menuSeleccionado << ", Trabajadores: " << temp->dato.numeroDeTrabajadores << "\n";
+        }
+        temp = temp->siguiente;
+    } while (temp != semana.obtenerCabeza());
+    archivo.close();
 }
 
 int main() {
@@ -98,7 +120,7 @@ int main() {
     const int diasPorSemana = 5;
 
     for (int i = 0; i < diasPorSemana; ++i) {
-        semana.insertarAlFinal(Dia{obtenerNombreDia(i), 0, 0, false});
+        semana.insertarAlFinal(Dia{obtenerNombreDia(i), "", 0, 0, false});
     }
 
     const float costoPorTrabajador = 2.25;
@@ -113,7 +135,7 @@ int main() {
     bool continuar = true;
 
     while (continuar) {
-        mostrarMenuPrincipal();
+        mostrarMenuPrincipal(semanaActual, obtenerNombreDia(diaActual % diasPorSemana));
         int opcion;
         cin >> opcion;
 
@@ -125,12 +147,21 @@ int main() {
                     actual = actual->siguiente;
                 }
 
-                int opcionMenu;
-                cout << "Ingrese el menu para " << actual->dato.nombre << ":\n";
+                if (actual->dato.esFeriado) {
+                    cout << "El dia es feriado, no se pueden ingresar datos.\n";
+                    break;
+                }
+
+                cout << "Ingrese el nombre de la empresa para " << actual->dato.nombreDia << ": ";
+                cin.ignore();
+                getline(cin, actual->dato.nombreEmpresa);
+
+                cout << "Ingrese el menu para " << actual->dato.nombreDia << ":\n";
                 cout << "1. " << menus[0] << "\n";
                 cout << "2. " << menus[1] << "\n";
                 cout << "3. " << menus[2] << "\n";
                 cout << "Opcion: ";
+                int opcionMenu;
                 cin >> opcionMenu;
                 if (opcionMenu >= 1 && opcionMenu <= 3) {
                     actual->dato.menuSeleccionado = opcionMenu;
@@ -138,24 +169,11 @@ int main() {
                     cout << "Opcion invalida.\n";
                 }
 
-                cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
+                cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
-                diaActual++;
                 break;
             }
             case 2: {
-                int diaSemana = diaActual % diasPorSemana;
-                actual = semana.obtenerCabeza();
-                for (int i = 0; i < diaSemana; ++i) {
-                    actual = actual->siguiente;
-                }
-
-                cout << "Ingrese el numero de trabajadores para " << actual->dato.nombre << ": ";
-                cin >> actual->dato.numeroDeTrabajadores;
-                cout << "Numero de trabajadores actualizado correctamente.\n";
-                break;
-            }
-            case 3: {
                 float costoTotal = 0.0;
                 Nodo<Dia>* temp = semana.obtenerCabeza();
                 do {
@@ -168,7 +186,7 @@ int main() {
                 temp = semana.obtenerCabeza();
                 cout << "\nMenu semanal (Semana " << semanaActual << "):\n";
                 do {
-                    cout << temp->dato.nombre << ": ";
+                    cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
                     if (temp->dato.esFeriado) {
                         cout << "FERIADO\n";
                     } else {
@@ -180,52 +198,31 @@ int main() {
                 cout << "Costo total semanal: $" << costoTotal << endl;
                 break;
             }
-            case 4: {
+            case 3: {
                 int diaSemana = diaActual % diasPorSemana;
                 actual = semana.obtenerCabeza();
                 for (int i = 0; i < diaSemana; ++i) {
                     actual = actual->siguiente;
                 }
 
-                cout << "Marcando el dia " << actual->dato.nombre << " como feriado.\n";
+                cout << "Marcando el dia " << actual->dato.nombreDia << " como feriado.\n";
                 actual->dato.esFeriado = true;
                 actual->dato.menuSeleccionado = 0;
                 actual->dato.numeroDeTrabajadores = 0;
                 break;
             }
-            case 5: {
+            case 4: {
                 cout << "Terminando la semana actual." << endl;
+                guardarDatosSemana(semana, semanaActual);
                 semanaActual++;
                 diaActual = 0;
                 break;
             }
-            case 6: {
-                int diaSemana = diaActual % diasPorSemana;
-                actual = semana.obtenerCabeza();
-                for (int i = 0; i < diaSemana; ++i) {
-                    actual = actual->siguiente;
-                }
-
-                int opcionMenu;
-                cout << "Ingrese el nuevo menu para " << actual->dato.nombre << ":\n";
-                cout << "1. " << menus[0] << "\n";
-                cout << "2. " << menus[1] << "\n";
-                cout << "3. " << menus[2] << "\n";
-                cout << "Opcion: ";
-                cin >> opcionMenu;
-                if (opcionMenu >= 1 && opcionMenu <= 3) {
-                    actual->dato.menuSeleccionado = opcionMenu;
-                    cout << "Menu actualizado correctamente.\n";
-                } else {
-                    cout << "Opcion invalida.\n";
-                }
-                break;
-            }
-            case 7: {
+            case 5: {
                 Nodo<Dia>* temp = semana.obtenerCabeza();
                 cout << "\nDias de la semana actual (Semana " << semanaActual << "):\n";
                 do {
-                    cout << temp->dato.nombre << ": ";
+                    cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
                     if (temp->dato.esFeriado) {
                         cout << "FERIADO\n";
                     } else {
@@ -235,12 +232,12 @@ int main() {
                 } while (temp != semana.obtenerCabeza());
                 break;
             }
-            case 8: {
+            case 6: {
                 continuar = false;
                 break;
             }
             default:
-                cout << "Opción no válida. Intente nuevamente." << endl;
+                cout << "Opcion no válida. Intente nuevamente." << endl;
         }
     }
 
