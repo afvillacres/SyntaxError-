@@ -1,4 +1,5 @@
 
+
 /** pongan comentarios en lo que hacen para no perdernos xd
 Si algo sacaron de un video o asi le ponen junto a lo que
 hicieron para tener mas o menos una idea y seguir :D
@@ -113,6 +114,42 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
     archivo.close();
 }
 
+// Función para solicitar el numero y validarlo
+int validarNumero() {
+    char entrada[30];
+    int numero;
+    bool esEntero;
+
+    while (true) {
+        cin.getline(entrada, 30);
+        esEntero = true;
+        for (int i = 0; entrada[i] != '\0'; i++) {
+            if (!isdigit(entrada[i])) {
+                esEntero = false;
+                break;
+            }
+        }
+
+        if (esEntero) {
+            numero = atoi(entrada);
+            return numero;
+        } else {
+            cout << "Entrada no valida. Intente nuevamente" << endl;
+
+        }
+    }
+}
+
+// Función para validar el rango de un numero si es necesario
+bool validarCondicion(int numero, int minimo, int maximo) {
+    if (numero >= minimo && numero <= maximo) {
+        return true;
+    } else {
+        cout << "Numero no valido. Intente nuevamente" << endl;
+        return false;
+    }
+}
+
 int main() {
     listaCircularDoble<Dia> semana;
     int diaActual = 0;
@@ -137,7 +174,9 @@ int main() {
     while (continuar) {
         mostrarMenuPrincipal(semanaActual, obtenerNombreDia(diaActual % diasPorSemana));
         int opcion;
-        cin >> opcion;
+        do{
+            opcion = validarNumero();
+        }while(!validarCondicion(opcion, 1 ,6));
 
         switch (opcion) {
             case 1: {
@@ -162,15 +201,16 @@ int main() {
                 cout << "3. " << menus[2] << "\n";
                 cout << "Opcion: ";
                 int opcionMenu;
-                cin >> opcionMenu;
-                if (opcionMenu >= 1 && opcionMenu <= 3) {
-                    actual->dato.menuSeleccionado = opcionMenu;
-                } else {
-                    cout << "Opcion invalida.\n";
-                }
+                do{
+                    opcionMenu = validarNumero();
+                }while(!validarCondicion(opcionMenu, 1 ,3));
 
+                actual->dato.menuSeleccionado = opcionMenu;
+
+                int numTrabajadores;
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
-                cin >> actual->dato.numeroDeTrabajadores;
+                numTrabajadores = validarNumero();
+                actual->dato.numeroDeTrabajadores = numTrabajadores;
                 break;
             }
             case 2: {
