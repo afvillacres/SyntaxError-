@@ -1,5 +1,4 @@
 
-
 /** pongan comentarios en lo que hacen para no perdernos xd
 Si algo sacaron de un video o asi le ponen junto a lo que
 hicieron para tener mas o menos una idea y seguir :D
@@ -72,13 +71,13 @@ public:
 };
 
 void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
-    cout << "\n------ Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " -------------\n";
-    cout << "1. Ingresar/modificar datos del dia\n";
-    cout << "2. Ver menu y costo semanal\n";
-    cout << "3. Marcar dia como feriado\n";
-    cout << "4. Terminar la semana\n";
-    cout << "5. Imprimir dias con sus menus y numero de trabajadores\n";
-    cout << "6. Salir del programa\n";
+    cout << "\n-------- Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " --------\n";
+    cout << "1. Ingresar/modificar datos del dia.\n";
+    cout << "2. Ver menu y costo semanal.\n";
+    cout << "3. Marcar dia como feriado.\n";
+    cout << "4. Terminar la semana.\n";
+    cout << "5. Imprimir dias con sus menus y numero de trabajadores.\n";
+    cout << "6. Salir del programa.\n";
     cout << "Ingrese una opcion: ";
 }
 
@@ -114,43 +113,7 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
     archivo.close();
 }
 
-// Función para solicitar el numero y validarlo
-int validarNumero() {
-    char entrada[30];
-    int numero;
-    bool esEntero;
-
-    while (true) {
-        cin.getline(entrada, 30);
-        esEntero = true;
-        for (int i = 0; entrada[i] != '\0'; i++) {
-            if (!isdigit(entrada[i])) {
-                esEntero = false;
-                break;
-            }
-        }
-
-        if (esEntero) {
-            numero = atoi(entrada);
-            return numero;
-        } else {
-            cout << "Entrada no valida. Intente nuevamente" << endl;
-
-        }
-    }
-}
-
-// Función para validar el rango de un numero si es necesario
-bool validarCondicion(int numero, int minimo, int maximo) {
-    if (numero >= minimo && numero <= maximo) {
-        return true;
-    } else {
-        cout << "Numero no valido. Intente nuevamente" << endl;
-        return false;
-    }
-}
-
-int main() {
+int mainPrincipal(){
     listaCircularDoble<Dia> semana;
     int diaActual = 0;
     int semanaActual = 1;
@@ -174,9 +137,13 @@ int main() {
     while (continuar) {
         mostrarMenuPrincipal(semanaActual, obtenerNombreDia(diaActual % diasPorSemana));
         int opcion;
-        do{
-            opcion = validarNumero();
-        }while(!validarCondicion(opcion, 1 ,6));
+
+        //VIDEO USADO COMO GUIA: https://www.youtube.com/watch?v=4eCLiVhTwQc
+        while(!(cin >> opcion)){
+            cout << "\nDato erroneo! Ingrese solo un numero: ";
+            cin.clear();
+            cin.ignore(132, '\n');
+        }
 
         switch (opcion) {
             case 1: {
@@ -201,16 +168,15 @@ int main() {
                 cout << "3. " << menus[2] << "\n";
                 cout << "Opcion: ";
                 int opcionMenu;
-                do{
-                    opcionMenu = validarNumero();
-                }while(!validarCondicion(opcionMenu, 1 ,3));
+                cin >> opcionMenu;
+                if (opcionMenu >= 1 && opcionMenu <= 3) {
+                    actual->dato.menuSeleccionado = opcionMenu;
+                } else {
+                    cout << "Opcion invalida.\n";
+                }
 
-                actual->dato.menuSeleccionado = opcionMenu;
-
-                int numTrabajadores;
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
-                numTrabajadores = validarNumero();
-                actual->dato.numeroDeTrabajadores = numTrabajadores;
+                cin >> actual->dato.numeroDeTrabajadores;
                 break;
             }
             case 2: {
@@ -277,11 +243,17 @@ int main() {
                 break;
             }
             default:
-                cout << "Opcion no válida. Intente nuevamente." << endl;
+                cout << "Opcion no valida. Intente nuevamente." << endl;
         }
     }
 
     cout << "Programa finalizado. Gracias por usar el sistema." << endl;
+
+    return 0;
+}
+
+int main() {
+    mainPrincipal();
 
     return 0;
 }
