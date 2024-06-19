@@ -128,23 +128,23 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
 
 void dibujarAgradeciminento(){
     cout<<"        .--..--..--..--..--..--."<<endl;
-    cout<<"      .' \  (`._   (_)     _   \""<<endl;
+    cout<<"      .' \\  (`._   (_)     _   \\"<<endl;
     cout<<"    .'    |  '._)         (_)  |"<<endl;
-    cout<<"    \ _.')\      .----..---.   /"<<endl;
-    cout<<"    |(_.'  |    /    .-\-.  \  |"<<endl;
-    cout<<"    \     0|    |   ( O| O) | o|"<<endl;
+    cout<<"    \\ _.')\\      .----..---.   /"<<endl;
+    cout<<"    |(_.'  |    /    .-\\-.  \\  |"<<endl;
+    cout<<"    \\     0|    |   ( O| O) | o|"<<endl;
     cout<<"     |  _  |  .--.____.'._.-.  |"<<endl;
-    cout<<"     \ (_) | o         -` .-`  |"<<endl;
-    cout<<"      |    \   |`-._ _ _ _ _\ /"<<endl;
-    cout<<"      \    |   |  `. |_||_|   |"<<endl;
-    cout<<"      | o  |    \_      \     |     -.   .-."<<endl;
-    cout<<"      |.-.  \     `--..-'   O |     `.`-' .'"<<endl;
+    cout<<"     \\ (_) | o         -` .-`  |"<<endl;
+    cout<<"      |    \\   |`-._ _ _ _ _\\ /"<<endl;
+    cout<<"      \\    |   |  `. |_||_|   |"<<endl;
+    cout<<"      | o  |    \\_      \     |     -.   .-."<<endl;
+    cout<<"      |.-.  \\     `--..-'   O |     `.`-' .'"<<endl;
     cout<<"    _.'  .' |     `-.-'      /-.__   ' .-'"<<endl;
     cout<<"  .' `-.` '.|='=.='=.='=.='=|._/_ `-'.'"<<endl;
-    cout<<"  `-._  `.  |________/\_____|    `-.'"<<endl;
-    cout<<"     .'   ).| '=' '='\/ '=' |"<<endl;
+    cout<<"  `-._  `.  |________/\\_____|    `-.'"<<endl;
+    cout<<"     .'   ).| '=' '='\\/ '=' |"<<endl;
     cout<<"     `._.`  '---------------'"<<endl;
-    cout<<"             //___\   //___\" "<<endl;
+    cout<<"             //___\\   //___\\ "<<endl;
     cout<<"               ||       ||"<<endl;
     cout<<"               ||_.-.   ||_.-."<<endl;
     cout<<"              (_.--__) (_.--__)"<<endl;
@@ -344,7 +344,6 @@ int main() {
         }
     }
 
-    cout << "Programa finalizado. Gracias por usar el sistema." << endl;
     dibujarAgradeciminento();
 
     return 0;
