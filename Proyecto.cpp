@@ -78,14 +78,14 @@ public:
 };
 
 void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
-    cout << "\n------ Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " -------------\n";
-    cout << "1. Ingresar datos del dia\n";
-    cout << "2. Ver menu y costo semanal\n";
-    cout << "3. Marcar dia como feriado\n";
-    cout << "4. Terminar la semana\n";
-    cout << "5. Imprimir dias con sus menus y numero de trabajadores\n";
-    cout << "6. Modificar un dia dentro de la semana\n";
-    cout << "7. Salir del programa\n";
+    cout << "\n-------- Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " --------\n";
+    cout << "1. Ingresar datos segun el dia.\n";
+    cout << "2. Ver menu y costo semanal.\n";
+    cout << "3. Marcar dia como feriado.\n";
+    cout << "4. Terminar la semana.\n";
+    cout << "5. Modificar un dia dentro de la semana.\n";
+    cout << "6. Imprimir dias con sus menus y numero de trabajadores.\n";
+    cout << "7. Salir del programa.\n";
     cout << "Ingrese una opcion: ";
 }
 
@@ -137,7 +137,7 @@ void dibujarAgradeciminento(){
     cout<<"     \\ (_) | o         -` .-`  |"<<endl;
     cout<<"      |    \\   |`-._ _ _ _ _\\ /"<<endl;
     cout<<"      \\    |   |  `. |_||_|   |"<<endl;
-    cout<<"      | o  |    \\_      \     |     -.   .-."<<endl;
+    cout<<"      | o  |    \\_      \     |     -.   .-." <<endl;
     cout<<"      |.-.  \\     `--..-'   O |     `.`-' .'"<<endl;
     cout<<"    _.'  .' |     `-.-'      /-.__   ' .-'"<<endl;
     cout<<"  .' `-.` '.|='=.='=.='=.='=|._/_ `-'.'"<<endl;
@@ -154,9 +154,7 @@ void dibujarAgradeciminento(){
 
 }
 
-
-
-int main() {
+void mainPrincipal(){
     listaCircularDoble<Dia> semana;
     int diaActual = 0;
     int semanaActual = 1;
@@ -181,7 +179,13 @@ int main() {
     while (continuar) {
         mostrarMenuPrincipal(semanaActual, obtenerNombreDia(diaActual % diasPorSemana));
         int opcion;
-        cin >> opcion;
+
+        //VIDEO USADO COMO GUIA: https://www.youtube.com/watch?v=4eCLiVhTwQc
+        while(!(cin >> opcion)){
+            cout << "\nDato erroneo! Ingrese solo un numero: ";
+            cin.clear();
+            cin.ignore(132, '\n');
+        }
 
         switch (opcion) {
             case 1: {
@@ -230,6 +234,7 @@ int main() {
                 }
                 break;
             }
+
             case 2: {
                 float costoTotal = 0.0;
                 Nodo<Dia>* temp = semana.obtenerCabeza();
@@ -255,6 +260,7 @@ int main() {
                 cout << "Costo total semanal: $" << costoTotal << endl;
                 break;
             }
+
             case 3: {
                 int diaSemana = diaActual % diasPorSemana;
                 actual = semana.obtenerCabeza();
@@ -269,6 +275,7 @@ int main() {
                 diaActual = (diaActual + 1) % diasPorSemana;//tambien le salta al dia siguiente y le marca a ese dia como feriado
                 break;
             }
+
             case 4: {
                 cout << "Terminando la semana actual." << endl;
                 guardarDatosSemana(semana, semanaActual);
@@ -276,22 +283,8 @@ int main() {
                 diaActual = 0;
                 break;
             }
-            case 5: {
-                Nodo<Dia>* temp = semana.obtenerCabeza();
-                cout << "\nDias de la semana actual (Semana " << semanaActual << "):\n";
-                do {
-                    cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
-                    if (temp->dato.esFeriado) {
-                        cout << "FERIADO\n";
-                    } else {
-                        cout << menus[temp->dato.menuSeleccionado - 1] << " (Trabajadores: " << temp->dato.numeroDeTrabajadores << ")\n";
-                    }
-                    temp = temp->siguiente;
-                } while (temp != semana.obtenerCabeza());
-                break;
-            }
 
-            case 6: {
+            case 5: {
                 int diaSemanaModificar;
                 cout << "Ingrese el dia de la semana que desea modificar (1 - 5): ";
                 cin >> diaSemanaModificar;
@@ -335,6 +328,22 @@ int main() {
                 break;
             }
 
+
+            case 6: {
+                Nodo<Dia>* temp = semana.obtenerCabeza();
+                cout << "\nDias de la semana actual (Semana " << semanaActual << "):\n";
+                do {
+                    cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
+                    if (temp->dato.esFeriado) {
+                        cout << "FERIADO\n";
+                    } else {
+                        cout << menus[temp->dato.menuSeleccionado - 1] << " (Trabajadores: " << temp->dato.numeroDeTrabajadores << ")\n";
+                    }
+                    temp = temp->siguiente;
+                } while (temp != semana.obtenerCabeza());
+                break;
+            }
+
             case 7: {
                 continuar = false;
                 break;
@@ -345,6 +354,13 @@ int main() {
     }
 
     dibujarAgradeciminento();
+
+}
+
+
+
+int main() {
+    mainPrincipal();
 
     return 0;
 }
