@@ -68,6 +68,10 @@ public:
     Nodo<T>* obtenerCabeza() {
         return cabeza;
     }
+
+    bool listaVacia() const{
+        return cabeza == NULL;
+    }
 };
 
 void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
@@ -113,8 +117,43 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
     archivo.close();
 }
 
+<<<<<<< Updated upstream
 int mainPrincipal(){
+=======
+
+
+void dibujarAgradeciminento(){
+    cout<<"        .--..--..--..--..--..--."<<endl;
+    cout<<"      .' \\  (`._   (_)     _   \\"<<endl;
+    cout<<"    .'    |  '._)         (_)  |"<<endl;
+    cout<<"    \\ _.')\\      .----..---.   /"<<endl;
+    cout<<"    |(_.'  |    /    .-\\-.  \\  |"<<endl;
+    cout<<"    \\     0|    |   ( O| O) | o|"<<endl;
+    cout<<"     |  _  |  .--.____.'._.-.  |"<<endl;
+    cout<<"     \\ (_) | o         -` .-`  |"<<endl;
+    cout<<"      |    \\   |`-._ _ _ _ _\\ /"<<endl;
+    cout<<"      \\    |   |  `. |_||_|   |"<<endl;
+    cout<<"      | o  |    \\_      \     |     -.   .-." <<endl;
+    cout<<"      |.-.  \\     `--..-'   O |     `.`-' .'"<<endl;
+    cout<<"    _.'  .' |     `-.-'      /-.__   ' .-'"<<endl;
+    cout<<"  .' `-.` '.|='=.='=.='=.='=|._/_ `-'.'"<<endl;
+    cout<<"  `-._  `.  |________/\\_____|    `-.'"<<endl;
+    cout<<"     .'   ).| '=' '='\\/ '=' |"<<endl;
+    cout<<"     `._.`  '---------------'"<<endl;
+    cout<<"             //___\\   //___\\ "<<endl;
+    cout<<"               ||       ||"<<endl;
+    cout<<"               ||_.-.   ||_.-."<<endl;
+    cout<<"              (_.--__) (_.--__)"<<endl;
+    cout<<"-------------------------------------------------------"<<endl;
+    cout<<"----------------Gracias por usar el sistema.-----------"<<endl;
+    cout<<"----------------Grupo 8- Syntaxis Error.-----------"<<endl;
+
+}
+
+void mainPrincipal(){
+>>>>>>> Stashed changes
     listaCircularDoble<Dia> semana;
+    listaCircularDoble<int> lista;
     int diaActual = 0;
     int semanaActual = 1;
     const int diasPorSemana = 5;
@@ -180,28 +219,44 @@ int mainPrincipal(){
                 break;
             }
             case 2: {
-                float costoTotal = 0.0;
+                bool datosIngresados = false;
                 Nodo<Dia>* temp = semana.obtenerCabeza();
-                do {
-                    if (!temp->dato.esFeriado) {
-                        costoTotal += costoPorTrabajador * temp->dato.numeroDeTrabajadores;
+                do{
+                    if (!temp->dato.nombreEmpresa.empty()) {
+                        datosIngresados = true;
+                        break;
                     }
                     temp = temp->siguiente;
                 } while (temp != semana.obtenerCabeza());
 
-                temp = semana.obtenerCabeza();
-                cout << "\nMenu semanal (Semana " << semanaActual << "):\n";
-                do {
-                    cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
-                    if (temp->dato.esFeriado) {
-                        cout << "FERIADO\n";
-                    } else {
-                        cout << menus[temp->dato.menuSeleccionado - 1] << " (Trabajadores: " << temp->dato.numeroDeTrabajadores << ")\n";
-                    }
-                    temp = temp->siguiente;
-                } while (temp != semana.obtenerCabeza());
+                if(datosIngresados){
+                    float costoTotal = 0.0;
+                    Nodo<Dia>* temp = semana.obtenerCabeza();
+                    do {
+                        if (!temp->dato.esFeriado) {
+                            costoTotal += costoPorTrabajador * temp->dato.numeroDeTrabajadores;
+                        }
+                        temp = temp->siguiente;
+                    } while (temp != semana.obtenerCabeza());
 
-                cout << "Costo total semanal: $" << costoTotal << endl;
+                    temp = semana.obtenerCabeza();
+                    cout << "\nMenu semanal (Semana " << semanaActual << "):\n";
+                    do {
+                        cout << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
+                        if (temp->dato.esFeriado) {
+                            cout << "FERIADO\n";
+                        } else {
+                            cout << menus[temp->dato.menuSeleccionado - 1] << " (Trabajadores: " << temp->dato.numeroDeTrabajadores << ")\n";
+                        }
+                        temp = temp->siguiente;
+                    } while (temp != semana.obtenerCabeza());
+
+                    cout << "Costo total semanal: $" << costoTotal << endl;
+                } else{
+                    cout << "Por favor ingrese los datos de la empresa." << endl;
+                    cout << endl;
+                }
+
                 break;
             }
             case 3: {
