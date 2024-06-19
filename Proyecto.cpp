@@ -117,11 +117,6 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
     archivo.close();
 }
 
-<<<<<<< Updated upstream
-int mainPrincipal(){
-=======
-
-
 void dibujarAgradeciminento(){
     cout<<"        .--..--..--..--..--..--."<<endl;
     cout<<"      .' \\  (`._   (_)     _   \\"<<endl;
@@ -150,8 +145,10 @@ void dibujarAgradeciminento(){
 
 }
 
-void mainPrincipal(){
->>>>>>> Stashed changes
+
+
+
+int mainPrincipal(){
     listaCircularDoble<Dia> semana;
     listaCircularDoble<int> lista;
     int diaActual = 0;
