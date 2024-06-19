@@ -1,6 +1,6 @@
-Semana 2:
-Lunes (MonsterInc): Menu: 3, Trabajadores: 14
-Martes (): Menu: 0, Trabajadores: 0
-Miercoles (): Menu: 0, Trabajadores: 0
-Jueves (): Menu: 0, Trabajadores: 0
-Viernes (): Menu: 0, Trabajadores: 0
+Semana 1:
+Lunes (empresa 1): Menu: 2, Trabajadores: 15
+Martes (): FERIADO
+Miercoles (empresa 2): Menu: 3, Trabajadores: 20
+Jueves (empresa feliz): Menu: 2, Trabajadores: 16
+Viernes (empresa triste): Menu: 2, Trabajadores: 17

@@ -17,8 +17,15 @@ struct Dia {
     bool esFeriado;
 
     // Constructor para inicializar los datos del dia
-    Dia(string _nombreDia, string _nombreEmpresa, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado)
-        : nombreDia(_nombreDia), nombreEmpresa(_nombreEmpresa), numeroDeTrabajadores(_numTrabajadores), menuSeleccionado(_menuSeleccionado), esFeriado(_esFeriado) {}
+    Dia(string _nombreDia, string _nombreEmpresa, int _numTrabajadores, int _menuSeleccionado, bool _esFeriado): nombreDia(_nombreDia), nombreEmpresa(_nombreEmpresa), numeroDeTrabajadores(_numTrabajadores), menuSeleccionado(_menuSeleccionado), esFeriado(_esFeriado) {}
+
+    //el metodo ya lo dice :D
+    void actualizarDatos(string _nombreEmpresa, int _menuSeleccionado, int _numTrabajadores, bool _esFeriado) {
+        nombreEmpresa = _nombreEmpresa;
+        menuSeleccionado = _menuSeleccionado;
+        numeroDeTrabajadores = _numTrabajadores;
+        esFeriado = _esFeriado;
+    }
 };
 
 template<typename T>
@@ -72,7 +79,7 @@ public:
 
 void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
     cout << "\n------ Menu de opciones: Semana " << semanaActual << " - Dia " << nombreDia << " -------------\n";
-    cout << "1. Ingresar/modificar datos del dia\n";
+    cout << "1. Ingresar datos del dia\n";
     cout << "2. Ver menu y costo semanal\n";
     cout << "3. Marcar dia como feriado\n";
     cout << "4. Terminar la semana\n";
@@ -88,19 +95,22 @@ string obtenerNombreDia(int dia) {
         case 2: return "Miercoles";
         case 3: return "Jueves";
         case 4: return "Viernes";
-        default: return "Dia no valido";
     }
 }
 
+
 //guarda al finalizar cada semana xd
 void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
-    ofstream archivo("datos_semana.txt");
+    ofstream archivo;
+    archivo.open("datos_semana.txt", ios::app);
+
     if (!archivo) {
         cerr << "Error al abrir el archivo para guardar los datos." << endl;
         return;
     }
-    Nodo<Dia>* temp = semana.obtenerCabeza();
+
     archivo << "Semana " << semanaActual << ":\n";
+    Nodo<Dia>* temp = semana.obtenerCabeza();
     do {
         archivo << temp->dato.nombreDia << " (" << temp->dato.nombreEmpresa << "): ";
         if (temp->dato.esFeriado) {
@@ -110,6 +120,7 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
         }
         temp = temp->siguiente;
     } while (temp != semana.obtenerCabeza());
+
     archivo.close();
 }
 
@@ -171,6 +182,7 @@ int main() {
 
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
+                diaActual = (diaActual + 1) % diasPorSemana;//cambia al dia siguiente
                 break;
             }
             case 2: {
@@ -205,10 +217,11 @@ int main() {
                     actual = actual->siguiente;
                 }
 
-                cout << "Marcando el dia " << actual->dato.nombreDia << " como feriado.\n";
+                cout << "--------  Marcando el dia " << actual->dato.nombreDia << " como feriado.  --------\n";
                 actual->dato.esFeriado = true;
                 actual->dato.menuSeleccionado = 0;
                 actual->dato.numeroDeTrabajadores = 0;
+                diaActual = (diaActual + 1) % diasPorSemana;//tambien le salta al dia siguiente y le marca a ese dia como feriado
                 break;
             }
             case 4: {
