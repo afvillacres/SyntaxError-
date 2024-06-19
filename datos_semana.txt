@@ -4,3 +4,9 @@ Martes (): FERIADO
 Miercoles (empresa 2): Menu: 3, Trabajadores: 20
 Jueves (empresa feliz): Menu: 2, Trabajadores: 16
 Viernes (empresa triste): Menu: 2, Trabajadores: 17
+Semana 1:
+Lunes (Empresa feliz): Menu: 0, Trabajadores: 17
+Martes (): FERIADO
+Miercoles (): Menu: 0, Trabajadores: 0
+Jueves (): Menu: 0, Trabajadores: 0
+Viernes (): Menu: 0, Trabajadores: 0

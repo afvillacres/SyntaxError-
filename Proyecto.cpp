@@ -84,7 +84,8 @@ void mostrarMenuPrincipal(int semanaActual, string nombreDia) {
     cout << "3. Marcar dia como feriado\n";
     cout << "4. Terminar la semana\n";
     cout << "5. Imprimir dias con sus menus y numero de trabajadores\n";
-    cout << "6. Salir del programa\n";
+    cout << "6. Modificar un dia dentro de la semana\n";
+    cout << "7. Salir del programa\n";
     cout << "Ingrese una opcion: ";
 }
 
@@ -124,11 +125,43 @@ void guardarDatosSemana(listaCircularDoble<Dia>& semana, int semanaActual) {
     archivo.close();
 }
 
+
+void dibujarAgradeciminento(){
+    cout<<"        .--..--..--..--..--..--."<<endl;
+    cout<<"      .' \  (`._   (_)     _   \""<<endl;
+    cout<<"    .'    |  '._)         (_)  |"<<endl;
+    cout<<"    \ _.')\      .----..---.   /"<<endl;
+    cout<<"    |(_.'  |    /    .-\-.  \  |"<<endl;
+    cout<<"    \     0|    |   ( O| O) | o|"<<endl;
+    cout<<"     |  _  |  .--.____.'._.-.  |"<<endl;
+    cout<<"     \ (_) | o         -` .-`  |"<<endl;
+    cout<<"      |    \   |`-._ _ _ _ _\ /"<<endl;
+    cout<<"      \    |   |  `. |_||_|   |"<<endl;
+    cout<<"      | o  |    \_      \     |     -.   .-."<<endl;
+    cout<<"      |.-.  \     `--..-'   O |     `.`-' .'"<<endl;
+    cout<<"    _.'  .' |     `-.-'      /-.__   ' .-'"<<endl;
+    cout<<"  .' `-.` '.|='=.='=.='=.='=|._/_ `-'.'"<<endl;
+    cout<<"  `-._  `.  |________/\_____|    `-.'"<<endl;
+    cout<<"     .'   ).| '=' '='\/ '=' |"<<endl;
+    cout<<"     `._.`  '---------------'"<<endl;
+    cout<<"             //___\   //___\" "<<endl;
+    cout<<"               ||       ||"<<endl;
+    cout<<"               ||_.-.   ||_.-."<<endl;
+    cout<<"              (_.--__) (_.--__)"<<endl;
+    cout<<"-------------------------------------------------------"<<endl;
+    cout<<"----------------Gracias por usar el sistema.-----------"<<endl;
+    cout<<"----------------Grupo 8- Syntaxis Error.-----------"<<endl;
+
+}
+
+
+
 int main() {
     listaCircularDoble<Dia> semana;
     int diaActual = 0;
     int semanaActual = 1;
     const int diasPorSemana = 5;
+    int opcionMenu;
 
     for (int i = 0; i < diasPorSemana; ++i) {
         semana.insertarAlFinal(Dia{obtenerNombreDia(i), "", 0, 0, false});
@@ -167,22 +200,34 @@ int main() {
                 cin.ignore();
                 getline(cin, actual->dato.nombreEmpresa);
 
-                cout << "Ingrese el menu para " << actual->dato.nombreDia << ":\n";
-                cout << "1. " << menus[0] << "\n";
-                cout << "2. " << menus[1] << "\n";
-                cout << "3. " << menus[2] << "\n";
-                cout << "Opcion: ";
-                int opcionMenu;
-                cin >> opcionMenu;
-                if (opcionMenu >= 1 && opcionMenu <= 3) {
-                    actual->dato.menuSeleccionado = opcionMenu;
-                } else {
-                    cout << "Opcion invalida.\n";
-                }
+                do {
+                    cout << "Ingrese el menu para " << actual->dato.nombreDia << ":\n";
+                    cout << "1. " << menus[0] << "\n";
+                    cout << "2. " << menus[1] << "\n";
+                    cout << "3. " << menus[2] << "\n";
+                    cout << "Opcion: ";
+                    cin >> opcionMenu;
+
+                    if (opcionMenu < 1 || opcionMenu > 3) {
+                        cout << "Opcion invalida. Intente nuevamente.\n";
+                    }
+                } while (opcionMenu < 1 || opcionMenu > 3);
 
                 cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
                 cin >> actual->dato.numeroDeTrabajadores;
                 diaActual = (diaActual + 1) % diasPorSemana;//cambia al dia siguiente
+
+                // Verificar si es viernes
+                if (diaActual % diasPorSemana == 4) {
+                    char continuarSemana;
+                    cout << "¿Desea realizar alguna opcion adicional (s/n) o avanzar a la semana siguiente (p)? ";
+                    cin >> continuarSemana;
+
+                    if (continuarSemana == 'p' || continuarSemana == 'P') {
+                        semanaActual++;
+                        diaActual = 0; // Reiniciar al inicio de la siguiente semana
+                    }
+                }
                 break;
             }
             case 2: {
@@ -245,16 +290,62 @@ int main() {
                 } while (temp != semana.obtenerCabeza());
                 break;
             }
+
             case 6: {
+                int diaSemanaModificar;
+                cout << "Ingrese el dia de la semana que desea modificar (1 - 5): ";
+                cin >> diaSemanaModificar;
+
+                if (diaSemanaModificar < 1 || diaSemanaModificar > diasPorSemana) {
+                    cout << "Dia no valido. Intente nuevamente." << endl;
+                    break;
+                }
+
+                // Convertir a indice base 0 porque los dias van de 0(lunes) a 4(viernes)
+                int indiceDia = diaSemanaModificar - 1;
+                actual = semana.obtenerCabeza();
+                for (int i = 0; i < indiceDia; ++i) {
+                    actual = actual->siguiente;
+                }
+
+                cout << "Modificar datos para el dia " << actual->dato.nombreDia << ":\n";
+                cout << "Ingrese el nombre de la empresa: ";
+                cin.ignore();
+                getline(cin, actual->dato.nombreEmpresa);
+
+                cout << "Ingrese el menu para " << actual->dato.nombreDia << ":\n";
+                cout << "1. " << menus[0] << "\n";
+                cout << "2. " << menus[1] << "\n";
+                cout << "3. " << menus[2] << "\n";
+                cout << "Opcion: ";
+                int opcionMenu;
+                cin >> opcionMenu;
+                if (opcionMenu >= 1 && opcionMenu <= 3) {
+                    actual->dato.menuSeleccionado = opcionMenu;
+                } else {
+                    cout << "Opcion invalida.\n";
+                }
+
+                cout << "Ingrese el numero de trabajadores para " << actual->dato.nombreDia << ": ";
+                cin >> actual->dato.numeroDeTrabajadores;
+
+                actual->dato.esFeriado = false; // Quita el marcado como feriado en caso de que se haya guardado asi :p
+
+                cout << "Dia modificado exitosamente.\n";
+                break;
+            }
+
+            case 7: {
                 continuar = false;
                 break;
             }
             default:
-                cout << "Opcion no válida. Intente nuevamente." << endl;
+                cout << "Opcion no valida. Intente nuevamente." << endl;
         }
     }
 
     cout << "Programa finalizado. Gracias por usar el sistema." << endl;
+    dibujarAgradeciminento();
 
     return 0;
 }
